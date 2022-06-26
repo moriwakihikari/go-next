@@ -3,9 +3,14 @@ import Layout from "../components/Layout"
 
 export default function MainPage() {
     return (
-        <Layout title = "Main page">
-            <div className="text-green-900"></div>
-            Hello World!
-        </Layout>
+        <>
+            <Layout title="main_page">
+                <div className="text-green-900 bg-green-50 text-center">
+                Hello World!
+                ddd
+                </div>
+            </Layout>
+        </>
+        
     )
 }
