@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useRouter } from "next/router";
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -29,6 +30,7 @@ function Copyright(props: any) {
 const theme = createTheme();
 
 export default function SignInSide() {
+    const router = useRouter();
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -37,6 +39,12 @@ export default function SignInSide() {
       password: data.get('password'),
     });
   };
+
+  function handleSubmit2() {
+    router.push("/main_page");
+  }
+
+
 
   return (
     <ThemeProvider theme={theme}>
@@ -97,7 +105,8 @@ export default function SignInSide() {
                 control={<Checkbox value="remember" color="primary" />}
                 label="Remember me"
               />
-              <Button
+              <Button 
+                onClick={handleSubmit2}
                 type="submit"
                 fullWidth
                 variant="contained"
