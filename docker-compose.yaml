@@ -14,10 +14,9 @@ services:
     image: mysql:latest
     container_name: mysql_container
     environment:
-      MYSQL_ROOT_PASSWORD:
+      MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: go_next
       TZ: "Asia/Tokyo"
-      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
     volumes:
       - ./db/my.cnf:/etc/mysql/conf.d/my.cnf
       - ./db/init:/docker-entrypoint-initdb.d

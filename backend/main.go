@@ -1,59 +1,96 @@
 package main
 
 import (
-	"time"
+	"database/sql"
+	"log"
 
-	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 
 	_ "github.com/go-sql-driver/mysql"
 )
 
-type Product struct {
+type Posts struct {
 	gorm.Model
-	Code  string
-	Price uint
+	id    uint
+	title string
+	body  string
 }
 
-type User struct {
-	gorm.Model
-	ID       uint
-	Name     string
-	Age      int
-	Birthday time.Time
-}
+// func main() {
+// 	r := gin.Default()
+// 	r.GET("/ping", func(c *gin.Context) {
+// 		c.JSON(200, gin.H{
+// 			"message": "pong",
+// 		})
+// 	})
+// 	r.Run() // 0.0.0.0:8080 でサーバーを立てます。
+
+// 	sqlDB, err := sql.Open("mysql",
+// 		"user:password@tcp(127.0.0.1:3306)/go_next")
+// 	if err != nil {
+// 		log.Fatalln(err)
+// 	}
+
+// 	gormdb, _ := gorm.Open(mysql.New(mysql.Config{
+// 		Conn: sqlDB,
+// 	}), &gorm.Config{})
+
+// 	var post Posts
+// 	// var posts []Posts
+
+// 	result := gormdb.First(&post)
+// 	fmt.Print(result)
+// 	// result.RowsAffected // returns count of records found
+// 	// result.Error        // returns error or nil
+
+// }
 
 func main() {
-	r := gin.Default()
-	r.GET("/ping", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "pong",
-		})
-	})
-	r.Run() // 0.0.0.0:8080 でサーバーを立てます。
+	connectOnly()
 
-	// sqlDB, _ := sql.Open("mysql", "mydb_dsn")
-	// gormdb, _ := gorm.Open(mysql.New(mysql.Config{
-	// 	Conn: sqlDB,
-	// }), &gorm.Config{})
+	// r := gin.Default()
+	// r.GET("/ping", func(c *gin.Context) {
+	// 	c.JSON(200, gin.H{
+	// 		"message": "pong",
+	// 	})
+	// })
+	// r.Run() // 0.0.0.0:8080 でサーバーを立てます。
 
-	// user := User{Name: "Jinzhu", Age: 18, Birthday: time.Now()}
+}
 
-	// result := gormdb.Create(&user) // pass pointer of data to Create
+func connectOnly() {
+	// データベースのハンドルを取得する
+	db, err := sql.Open("mysql", "root:root@tcp(localhost:3306)/go_next")
+	if err != nil {
+		// ここではエラーを返さない
+		log.Fatal(err)
+	}
+	defer db.Close()
 
-	// user.ID             // returns inserted data's primary key
-	// result.Error        // returns error
-	// result.RowsAffected // returns inserted records count
+	// 実際に接続する
+	err = db.Ping()
+	if err != nil {
+		log.Fatal(err)
+	} else {
+		log.Println("データベース接続完了")
+	}
 
-	// dsn := "user:pass@tcp(127.0.0.1:3306)/dbname?charset=utf8mb4&parseTime=True&loc=Local"
-	// db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	rows, err := db.Query("SELECT * FROM posts")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer rows.Close()
 
-	// db, err := sql.Open("mysql", "user:password@/dbname")
-	// if err != nil {
-	// 	panic(err)
-	// }
-	// // See "Important settings" section.
-	// db.SetConnMaxLifetime(time.Minute * 3)
-	// db.SetMaxOpenConns(10)
-	// db.SetMaxIdleConns(10)
+	// SQLの実行
+	for rows.Next() {
+		var post Posts
+		err := rows.Scan(&post.id, &post.title, &post.body)
+
+		if err != nil {
+			panic(err.Error())
+		}
+		log.Println(post.id, post.title, post.body)
+
+	}
+
 }
