@@ -2,18 +2,20 @@ package main
 
 import (
 	"database/sql"
+	"go-next/controller"
 	"log"
-
-	"gorm.io/gorm"
+	"time"
 
 	_ "github.com/go-sql-driver/mysql"
 )
 
+//time型を使う場合DSNに?parseTime=Trueが必要
 type Posts struct {
-	gorm.Model
-	id    uint
-	title string
-	body  string
+	id        int
+	title     string
+	body      string
+	createdAt time.Time
+	updatedAt time.Time
 }
 
 // func main() {
@@ -30,23 +32,14 @@ type Posts struct {
 // 	if err != nil {
 // 		log.Fatalln(err)
 // 	}
-
-// 	gormdb, _ := gorm.Open(mysql.New(mysql.Config{
-// 		Conn: sqlDB,
-// 	}), &gorm.Config{})
-
-// 	var post Posts
-// 	// var posts []Posts
-
-// 	result := gormdb.First(&post)
-// 	fmt.Print(result)
-// 	// result.RowsAffected // returns count of records found
-// 	// result.Error        // returns error or nil
-
 // }
 
 func main() {
 	connectOnly()
+
+	router := controller.GetRouter()
+	router.Run()
+	// gormDbConnect()
 
 	// r := gin.Default()
 	// r.GET("/ping", func(c *gin.Context) {
@@ -60,11 +53,7 @@ func main() {
 
 func connectOnly() {
 	// データベースのハンドルを取得する
-	db, err := sql.Open("mysql", "root:root@tcp(localhost:3306)/go_next")
-	if err != nil {
-		// ここではエラーを返さない
-		log.Fatal(err)
-	}
+	db, err := sql.Open("mysql", "root:root@tcp(localhost:3306)/go_next?parseTime=True")
 	defer db.Close()
 
 	// 実際に接続する
@@ -84,13 +73,36 @@ func connectOnly() {
 	// SQLの実行
 	for rows.Next() {
 		var post Posts
-		err := rows.Scan(&post.id, &post.title, &post.body)
+		err := rows.Scan(&post.id, &post.title, &post.body, &post.createdAt, &post.updatedAt)
 
 		if err != nil {
 			panic(err.Error())
 		}
-		log.Println(post.id, post.title, post.body)
+		log.Println(post.id, post.title, post.body, post.createdAt, post.updatedAt)
 
 	}
 
 }
+
+// func gormDbConnect() {
+// 	//値の出力方法がわからない
+
+// 	dsn := "root:root@tcp(localhost:3306)/go_next?charset=utf8mb4&parseTime=True&loc=Local"
+// 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+// 	if err != nil {
+// 		// ここではエラーを返さない
+// 		log.Fatal(err)
+// 	}
+// 	var post Posts
+// 	// post := []Posts{}
+// 	result := db.Debug().Take(&post)
+// 	if err != nil {
+// 		log.Fatal(err)
+// 	}
+// 	// log.Println(post.id, post.title, post.body)
+// 	str, _ := json.Marshal(result)
+// 	fmt.Printf("%s\n", str)
+// 	log.Printf("%T\n", result)
+// 	log.Printf("%T\n", post)
+
+// }
