@@ -1,12 +1,17 @@
 import type { NextPage } from 'next'
-import Layout from "../components/Layaout"
+// import Layout2 from "../components/Layout2"
 import Auth from "../components/Auth"
+import Head from "next/head";
+
 
 const Home: NextPage = () => {
   return (
-    <Layout title="Login">
+    <>
+      <Head>
+        <title>{"Login"}</title>
+      </Head>
       <Auth />
-    </Layout>
+    </>
   )
 }
 export default Home

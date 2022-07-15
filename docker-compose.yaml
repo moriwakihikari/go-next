@@ -1,0 +1,25 @@
+version: "3" # composeファイルのバージョン
+services: 
+    # app: # サービス名
+    #     build: . # ビルドに使用するDockerfileの場所
+    #     tty: true # コンテナの永続化
+    #     ports: # ホストOSのポートとコンテナのポート番号 
+    #         - "8080:8080"
+    #     volumes:
+    #         - ./app:/go/src/app # マウントディレクトリ
+    #     depends_on: 
+    #         - mysql
+  mysql:
+    platform: linux/x86_64
+    image: mysql:latest
+    container_name: mysql_container
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: go_next
+      TZ: "Asia/Tokyo"
+    volumes:
+      - ./db/my.cnf:/etc/mysql/conf.d/my.cnf
+      - ./db/init:/docker-entrypoint-initdb.d
+      - ./db/mysql_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
