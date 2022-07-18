@@ -2,21 +2,20 @@ package main
 
 import (
 	"database/sql"
-	"go-next/controller"
+	"go-next/server"
 	"log"
-	"time"
 
 	_ "github.com/go-sql-driver/mysql"
 )
 
 //time型を使う場合DSNに?parseTime=Trueが必要
-type Posts struct {
-	id        int
-	title     string
-	body      string
-	createdAt time.Time
-	updatedAt time.Time
-}
+// type Posts struct {
+// 	id        int
+// 	title     string
+// 	body      string
+// 	createdAt time.Time
+// 	updatedAt time.Time
+// }
 
 // func main() {
 // 	r := gin.Default()
@@ -35,9 +34,9 @@ type Posts struct {
 // }
 
 func main() {
-	connectOnly()
+	// connectOnly()
 
-	router := controller.GetRouter()
+	router := server.GetRouter()
 	router.Run()
 	// gormDbConnect()
 
@@ -64,23 +63,23 @@ func connectOnly() {
 		log.Println("データベース接続完了")
 	}
 
-	rows, err := db.Query("SELECT * FROM posts")
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer rows.Close()
+	// rows, err := db.Query("SELECT * FROM posts")
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+	// defer rows.Close()
 
-	// SQLの実行
-	for rows.Next() {
-		var post Posts
-		err := rows.Scan(&post.id, &post.title, &post.body, &post.createdAt, &post.updatedAt)
+	// // SQLの実行
+	// for rows.Next() {
+	// 	var post Posts
+	// 	err := rows.Scan(&post.id, &post.title, &post.body, &post.createdAt, &post.updatedAt)
 
-		if err != nil {
-			panic(err.Error())
-		}
-		log.Println(post.id, post.title, post.body, post.createdAt, post.updatedAt)
+	// 	if err != nil {
+	// 		panic(err.Error())
+	// 	}
+	// 	log.Println(post.id, post.title, post.body, post.createdAt, post.updatedAt)
 
-	}
+	// }
 
 }
 
