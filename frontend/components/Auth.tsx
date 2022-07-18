@@ -51,17 +51,17 @@ export default function SignInSide() {
         signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const user = userCredential.user;
-        alert( 'ログインok!' );
         console.log( '● user' );
         console.log( user );
+        router.push("/main_page");
       })
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
+        alert( 'ログインに失敗しました。' );
       });
 
 
-    // router.push("/main_page");
   }
 
 
