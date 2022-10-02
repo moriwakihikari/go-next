@@ -107,7 +107,7 @@ export default function Layout2({children, title = "Default title"}: Props) {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap component="div">
-            Responsive drawer
+            Go-Next
           </Typography>
           <Link href='/main_page'>
               <Button

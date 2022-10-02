@@ -4,7 +4,6 @@ import type { NextPage } from 'next';
 import type { GetServerSideProps, GetServerSidePropsContext} from 'next';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
-
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
