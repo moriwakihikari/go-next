@@ -8,31 +8,6 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-//time型を使う場合DSNに?parseTime=Trueが必要
-// type Posts struct {
-// 	id        int
-// 	title     string
-// 	body      string
-// 	createdAt time.Time
-// 	updatedAt time.Time
-// }
-
-// func main() {
-// 	r := gin.Default()
-// 	r.GET("/ping", func(c *gin.Context) {
-// 		c.JSON(200, gin.H{
-// 			"message": "pong",
-// 		})
-// 	})
-// 	r.Run() // 0.0.0.0:8080 でサーバーを立てます。
-
-// 	sqlDB, err := sql.Open("mysql",
-// 		"user:password@tcp(127.0.0.1:3306)/go_next")
-// 	if err != nil {
-// 		log.Fatalln(err)
-// 	}
-// }
-
 func main() {
 	// connectOnly()
 
