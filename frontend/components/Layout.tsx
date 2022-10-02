@@ -1,4 +1,5 @@
-import * as React from 'react';
+import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -15,10 +16,14 @@ import MailIcon from '@mui/icons-material/Mail';
 import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
+import Link from 'next/link';
 import Head from "next/head";
+import { auth } from '../firebase/client';
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { ReactNode } from 'react'
 import { Footer } from './Footer';
-
+import { mainListItems } from './listItems';
 
 const drawerWidth = 240;
 
@@ -35,39 +40,41 @@ interface Props {
 
 export default function Layout2({children, title = "Default title"}: Props) {
   const [mobileOpen, setMobileOpen] = React.useState(false);
+  const router = useRouter();
+  const [_userId, setUserId] = useState<string>('1');
+
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
 
+  useEffect(() => {
+    getAuthId();
+  }, [router]);
+
+  async function getAuthId() {
+    const auth = getAuth();
+    const user = auth.currentUser;
+    if (user) {
+      setUserId(user.uid);
+    } else {
+      alert('認証セッションが無効です。再度ログイン後にお試しください。');
+      onLogout();
+    }
+  }
+
+
+  const onLogout = async () => {
+    await auth.signOut();
+    router.push('/');
+  };
+
+
   const drawer = (
     <div>
       <Toolbar />
-      <Divider />
       <List>
-        {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-          <ListItem key={text} disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
-      <Divider />
-      <List>
-        {['All mail', 'Trash', 'Spam'].map((text, index) => (
-          <ListItem key={text} disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItemButton>
-          </ListItem>
-        ))}
+            {mainListItems}
       </List>
     </div>
   );
@@ -88,6 +95,7 @@ export default function Layout2({children, title = "Default title"}: Props) {
           ml: { sm: `${drawerWidth}px` },
         }}
       >
+        <>
         <Toolbar>
           <IconButton
             color="inherit"
@@ -101,7 +109,18 @@ export default function Layout2({children, title = "Default title"}: Props) {
           <Typography variant="h6" noWrap component="div">
             Responsive drawer
           </Typography>
+          <Link href='/main_page'>
+              <Button
+                variant='contained'
+                color='success'
+                sx={{ width: 150, height: 50, margin: 2 }}
+                onClick={onLogout}
+              >
+                ログアウト
+              </Button>
+            </Link>
         </Toolbar>
+        </>
       </AppBar>
       <Box
         component="nav"
